@@ -1,0 +1,4 @@
+if((beresp.status == 401 || beresp.status == 404) && req.restarts < 1 && req.url.path ~ "/rest/V1/.*/"){
+  log "received " + beresp.status + " retrying";
+  restart;
+}
