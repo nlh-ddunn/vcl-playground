@@ -1,0 +1,4 @@
+#backup surrogate keys to x-magento-tags so the magento VCL can read and reassign to surrogate-key header
+if(beresp.http.surrogate-key && !beresp.http.x-magento-tags){
+  set beresp.http.x-magento-tags = beresp.http.surrogate-key;
+}
