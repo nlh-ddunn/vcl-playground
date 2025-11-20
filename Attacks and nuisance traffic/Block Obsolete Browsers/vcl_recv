@@ -1,0 +1,16 @@
+if(table.contains(allowed_browsers, client.browser.name) && (req.method == "POST" || table.lookup(protected_urls, req.url.path))){
+  declare local var.blockstate BOOL;
+  if(std.atoi(client.browser.version) < std.atoi(table.lookup(allowed_browsers,client.browser.name))){
+    if(table.contains(carve_out_browsers,client.browser.name) && std.atoi(client.browser.version) == std.atoi(table.lookup(carve_out_browsers,client.browser.name))){
+      set var.blockstate = false;
+    }else{
+      set var.blockstate = true;
+    }
+  }else{
+    set var.blockstate = false;
+  }
+  log "Block state is: " + var.blockstate;
+  if(var.blockstate){
+    error 643;
+  }
+}

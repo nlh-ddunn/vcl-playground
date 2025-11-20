@@ -1,0 +1,14 @@
+table protected_urls{
+  "/": "",
+}
+
+table allowed_browsers{
+  "Safari":"15",
+  "Chrome":"140",
+  "Microsoft Edge":"140",
+  "Firefox":"140",
+  "Opera":"120",
+}
+table carve_out_browsers{
+  "Chrome":"79", #Some legitimate site monitors spoof this old version of Chrome
+}
