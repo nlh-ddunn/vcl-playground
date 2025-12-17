@@ -2,6 +2,7 @@ if(obj.status == 615 ){
   set obj.status = 200;
   set obj.response = "OK";
   set obj.http.content-type = "text/plain";
+  #Place contents of verification file(s) in the synthetic responses
   if(req.http.host == "example.com"){
     synthetic "you can add apple pay verification directly to Fastly without uploading files";
   }else if(req.http.host == "example.net"){
