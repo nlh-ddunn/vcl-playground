@@ -1,3 +1,6 @@
+# Feel free to replace the latin text with your own, including a custom error page if desired
+# Note: this may break logging, so alternatively swicthing the obj.status from 200 to another 2XX response (eg: 204) may allow you to better filter results
+
 if(obj.status == 643){
   set obj.status = 200;
   set obj.response = "OK";
