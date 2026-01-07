@@ -1,3 +1,7 @@
+# Note: its best to create these tables manually from within the Magento admin panel.
+# this is only present to use as a reference.
+
+# this table contains urls that should be protected
 table protected_urls{
   "/": "",
 }
