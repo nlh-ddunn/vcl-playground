@@ -3,7 +3,3 @@ table cors_allowed{
   "example.com" : "1",
 }
 
-table urls_to_override {
-  "/example-path": "1",
-  "/another-path": "1"
-}

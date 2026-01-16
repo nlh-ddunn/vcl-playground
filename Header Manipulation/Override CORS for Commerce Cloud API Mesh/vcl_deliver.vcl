@@ -4,8 +4,7 @@
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods
 
 
-# This allows selective CORS overrides for chosen urls on specific domains
-if(table.contains(urls_to_override, req.url.path) && table.contains(cors_allowed, std.replace(req.http.referer, "https://", ""))){
+if(req.url.path ~ "^/api/[a-z0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}/graphql" && table.contains(cors_allowed, std.replace(req.http.referer, "https://", ""))){
   set resp.http.access-control-allow-origin = "*";
   set resp.http.access-control-allow-headers = "content-type, x-requested-with, store";
   set resp.http.access-control-allow-methods = "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS";

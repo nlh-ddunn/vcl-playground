@@ -40,7 +40,7 @@ This document provides a brief listing and description of the VCL snippets prese
 ## Avoidable 404s
 
 *   **Define Missing Favicon/Apple Icon**
-    *   **Description**: Rewrites requests for `favicon.ico` or `apple-touch-icon.png` to a specific path (e.g., `/media/favicon/...`), reducing 404 errors for these common assets.
+    *   **Description**: Uses a regular expression to capture requests for various standard favicon and smartphone/PWA icons (e.g., `favicon.ico`, `apple-touch-icon.png`, `android-chrome-*.png`, `mstile-*.png`, `safari-pinned-tab.svg`) and rewrites them to a canonical path, preventing 404 errors.
     *   **Files**: `Avoidable 404s/Define missing favicon.ico and apple/vcl_recv.vcl`
 
 ## CloudFlare
@@ -60,15 +60,19 @@ This document provides a brief listing and description of the VCL snippets prese
     *   **Files**: `Header Manipulation/Force caching on backends that do not send proper expiry/vcl_fetch.vcl`
 
 *   **Override CORS for Commerce Cloud**
-    *   **Description**: Modifies CORS headers (e.g., `Access-Control-Allow-Origin`) to support Adobe Commerce Cloud requirements.
+    *   **Description**: Allows selective CORS overrides for chosen URLs on specific domains using VCL tables (`cors_allowed` and `urls_to_override`).
     *   **Files**: `Header Manipulation/Override CORS for Commerce Cloud/` (`vcl_deliver.vcl`, `vcl_init.vcl`)
+
+*   **Override CORS for Commerce Cloud API Mesh**
+    *   **Description**: Updates CORS headers for API Mesh requests, verifying the origin against a allowed
+    *   **Files**: `Header Manipulation/Override CORS for Commerce Cloud API Mesh/` (`vcl_init.vcl`, `vcl_deliver.vcl`)
 
 *   **Spoof the Via Header**
     *   **Description**: Modifies the `Via` header, possibly to hide upstream proxies or for internal routing purposes.
     *   **Files**: `Header Manipulation/Spoof the via header/vcl_deliver.vcl`
 
 *   **Strip All But First IP from X-Forwarded-For**
-    *   **Description**: Cleans the `X-Forwarded-For` header by keeping only the first IP address, ensuring the origin sees the true client IP.
+    *   **Description**: Cleans the `X-Forwarded-For` header by keeping only the first IP address. Updated to support both IPv4 and IPv6 addresses using a comma-based separator check, ensuring the origin sees the true client IP.
     *   **Files**: `Header Manipulation/Strip all but the first IP from x-forwarded-for/vcl_recv.vcl`
 
 ## URL Manipulation
