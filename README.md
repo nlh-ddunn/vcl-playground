@@ -19,6 +19,16 @@ This document provides a brief listing and description of the VCL snippets prese
     *   **Description**: Blocks requests containing specific query string parameters that are associated with unwanted bot traffic.
     *   **Files**: `AI Bots/block based on query string/` (`vcl_init.vcl`, `vcl_recv.vcl`)
 
+## API Helper
+
+*   **Reattempt Magento 40X on REST**
+    *   **Description**: Retries REST API requests that return 401 or 404 errors, potentially to handle race conditions or temporary unavailability. usage: `req.restarts < 1`.
+    *   **Files**: `API helper/reattempt Magento 40X on REST/vcl_fetch`
+
+*   **Reattempt Magento 502**
+    *   **Description**: Retries requests that result in a 502 Bad Gateway error from the backend.
+    *   **Files**: `API helper/reattempt Magento 502`
+
 ## Attacks and Nuisance Traffic
 
 *   **Ban Abused Carts**
@@ -43,13 +53,21 @@ This document provides a brief listing and description of the VCL snippets prese
     *   **Description**: Uses a regular expression to capture requests for various standard favicon and smartphone/PWA icons (e.g., `favicon.ico`, `apple-touch-icon.png`, `android-chrome-*.png`, `mstile-*.png`, `safari-pinned-tab.svg`) and rewrites them to a canonical path, preventing 404 errors.
     *   **Files**: `Avoidable 404s/Define missing favicon.ico and apple/vcl_recv.vcl`
 
-## CloudFlare
+## Cache Manipulation
+
+*   **Avoid API Mesh Cache**
+    *   **Description**: Bypasses the cache (pass) for specific API Mesh GraphQL requests to ensure fresh data.
+    *   **Files**: `Cache Manipulation/Avoid API Mesh Cache/vcl_recv`
+
+## Header Manipulation
 
 *   **Fix-GeoIP**
     *   **Description**: Overrides the Fastly GeoIP lookup key with the `True-Client-IP` header provided by CloudFlare, ensuring accurate geolocation for requests coming through CloudFlare.
-    *   **Files**: `CloudFlare/Fix-GeoIP/vcl_recv.vcl`
+    *   **Files**: `Header Manipulation/Fix-GeoIP-CloudFlare/vcl_recv.vcl`
 
-## Header Manipulation
+*   **Fix-GeoIP-XFF**
+    *   **Description**: Overrides the Fastly GeoIP lookup key with the first IP in the `X-Forwarded-For` header. Useful when `True-Client-IP` is unavailable.
+    *   **Files**: `Header Manipulation/Fix-GeoIP-XFF/vcl_recv.vcl`
 
 *   **Force Content-Security-Policy to Report-Only**
     *   **Description**: Downgrades an enforced `Content-Security-Policy` header to `Content-Security-Policy-Report-Only`, useful for testing CSP changes without breaking functionality.
@@ -92,19 +110,3 @@ This document provides a brief listing and description of the VCL snippets prese
 *   **Filter utm_ parameters**
     *   **Description**: Strips Google Analytics (`utm_`) parameters from the query string to improve cache hit rates.
     *   **Files**: `URL Manipulation/Filter utm_ parameters from URL/vcl_recv.vcl`
-
-## API Helper
-
-*   **Reattempt Magento 40X on REST**
-    *   **Description**: Retries REST API requests that return 401 or 404 errors, potentially to handle race conditions or temporary unavailability. usage: `req.restarts < 1`.
-    *   **Files**: `API helper/reattempt Magento 40X on REST/vcl_fetch`
-
-*   **Reattempt Magento 502**
-    *   **Description**: Retries requests that result in a 502 Bad Gateway error from the backend.
-    *   **Files**: `API helper/reattempt Magento 502`
-
-## Cache Manipulation
-
-*   **Avoid API Mesh Cache**
-    *   **Description**: Bypasses the cache (pass) for specific API Mesh GraphQL requests to ensure fresh data.
-    *   **Files**: `Cache Manipulation/Avoid API Mesh Cache/vcl_recv`
