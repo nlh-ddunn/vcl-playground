@@ -35,6 +35,10 @@ This document provides a brief listing and description of the VCL snippets prese
     *   **Description**: Blocks requests to specific shopping cart IDs that are being abused, typically defined in a VCL table.
     *   **Files**: `Attacks and nuisance traffic/Ban Abused Carts from Adobe Commerce or Magento/` (`vcl_init.vcl`, `vcl_recv.vcl`)
 
+*   **Block Customer Address File Uploads (Session Reaper)**
+    *   **Description**: Blocks requests to `/customer/address_file/upload` unless the client IP is allowed, mitigating potential session reaper attacks or file upload abuse.
+    *   **Files**: `Attacks and nuisance traffic/Block customer address_file uploads (Session Reaper)/` (`vcl_init.vcl`, `vcl_recv.vcl`)
+
 *   **Block Exchange Server Requests**
     *   **Description**: Blocks requests targeting Microsoft Exchange Server paths (e.g., `autodiscover`, `owa`), which are often used by scanners to find vulnerabilities and may also generate unneeded backend load.
     *   **Files**: `Attacks and nuisance traffic/Block Exchange Server Requests/vcl_recv.vcl`
