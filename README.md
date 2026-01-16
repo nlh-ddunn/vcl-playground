@@ -59,6 +59,10 @@ This document provides a brief listing and description of the VCL snippets prese
     *   **Description**: Bypasses the cache (pass) for specific API Mesh GraphQL requests to ensure fresh data.
     *   **Files**: `Cache Manipulation/Avoid API Mesh Cache/vcl_recv`
 
+*   **Force Caching on Backends**
+    *   **Description**: Sets caching headers for backend responses that do not send proper expiry information, enforcing a default TTL.
+    *   **Files**: `Cache Manipulation/Force caching on backends that do not send proper expiry/vcl_fetch.vcl`
+
 ## Header Manipulation
 
 *   **Fix-GeoIP**
@@ -66,16 +70,12 @@ This document provides a brief listing and description of the VCL snippets prese
     *   **Files**: `Header Manipulation/Fix-GeoIP-CloudFlare/vcl_recv.vcl`
 
 *   **Fix-GeoIP-XFF**
-    *   **Description**: Overrides the Fastly GeoIP lookup key with the first IP in the `X-Forwarded-For` header. Useful when `True-Client-IP` is unavailable.
+    *   **Description**: Overrides the Fastly GeoIP lookup key with the first IP in the `X-Forwarded-For` header.
     *   **Files**: `Header Manipulation/Fix-GeoIP-XFF/vcl_recv.vcl`
 
 *   **Force Content-Security-Policy to Report-Only**
     *   **Description**: Downgrades an enforced `Content-Security-Policy` header to `Content-Security-Policy-Report-Only`, useful for testing CSP changes without breaking functionality.
     *   **Files**: `Header Manipulation/Force Content-Security-Policy to report-only/vcl_fetch.vcl`
-
-*   **Force Caching on Backends**
-    *   **Description**: Sets caching headers for backend responses that do not send proper expiry information, enforcing a default TTL.
-    *   **Files**: `Header Manipulation/Force caching on backends that do not send proper expiry/vcl_fetch.vcl`
 
 *   **Override CORS for Commerce Cloud**
     *   **Description**: Allows selective CORS overrides for chosen URLs on specific domains using VCL tables (`cors_allowed` and `urls_to_override`).
