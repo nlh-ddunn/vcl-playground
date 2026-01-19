@@ -2,7 +2,7 @@
 # Note: this may break logging, so alternatively swicthing the obj.status from 200 to another 2XX response (eg: 204) may allow you to better filter results
 
 if(obj.status == 643){
-  set obj.status = 200;
+  set obj.status = 202;
   set obj.response = "OK";
   set obj.http.Content-Type = "text/plain";
   synthetic {"
