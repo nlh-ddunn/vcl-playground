@@ -43,13 +43,17 @@ This document provides a brief listing and description of the VCL snippets prese
     *   **Description**: Blocks requests targeting Microsoft Exchange Server paths (e.g., `autodiscover`, `owa`), which are often used by scanners to find vulnerabilities and may also generate unneeded backend load.
     *   **Files**: `Attacks and nuisance traffic/Block Exchange Server Requests/vcl_recv.vcl`
 
+*   **Block Obsolete Browsers**
+    *   **Description**: Blocks requests from browser versions considered obsolete or insecure.
+    *   **Files**: `Attacks and nuisance traffic/Block Obsolete Browsers/` (`vcl_init`, `vcl_recv`, `vcl_err`)
+
 *   **Block Traffic per ISP**
     *   **Description**: Blocks traffic from specific ISPs based on the `client.as.name` variable, utilizing GeoIP data.
     *   **Files**: `Attacks and nuisance traffic/Block traffic per ISP/vcl_recv.vcl`
 
-*   **Block Obsolete Browsers**
-    *   **Description**: Blocks requests from browser versions considered obsolete or insecure.
-    *   **Files**: `Attacks and nuisance traffic/Block Obsolete Browsers/` (`vcl_init`, `vcl_recv`, `vcl_err`)
+*   **Block WordPress Paths**
+    *   **Description**: Blocks requests to common WordPress paths (e.g., `wp-admin`, `wp-login.php`, `xmlrpc.php`) with a 403 Forbidden error, preventing scanners from generating unneeded backend load as the server should not handle WordPress requests.
+    *   **Files**: `Attacks and nuisance traffic/Block WordPress paths/vcl_recv.vcl`
 
 ## Avoidable 404s
 
@@ -88,6 +92,10 @@ This document provides a brief listing and description of the VCL snippets prese
 *   **Override CORS for Commerce Cloud API Mesh**
     *   **Description**: Updates CORS headers for API Mesh requests, verifying the origin against a allowed
     *   **Files**: `Header Manipulation/Override CORS for Commerce Cloud API Mesh/` (`vcl_init.vcl`, `vcl_deliver.vcl`)
+
+*   **Patch to Correct Damaged Surrogate-Keys on Edge Delivery Services**
+    *   **Description**: Workaround for Adobe Edge Delivery Services to correct expected behavior. Falls back to `surrogate-key` values when `x-magento-tags` is not present, allowing both to function correctly.
+    *   **Files**: `Header Manipulation/Patch to correct damaged surrogate-keys on Edge Delivery Services/vcl_fetch.vcl`
 
 *   **Spoof the Via Header**
     *   **Description**: Modifies the `Via` header, possibly to hide upstream proxies or for internal routing purposes.
