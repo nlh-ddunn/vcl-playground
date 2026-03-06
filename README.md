@@ -1,124 +1,128 @@
 # vcl-playground
 This is a collection of VCL snippets for addressing commonly encountered issues on Magento / Adobe Commerce with Fastly kept in a repository for quick and easy use and reuse.
 
-Files are added when and if I find an issue requiring re-use (instead of one-offs) of VCL code.  They are not intended to be used together since there is no attempt to ensure there are no crossover / re-use of error codes and updates / changes may be expected if implemented on a live site.
+These snippets are added on an as-needed basis when VCL code needs to be reused across projects, rather than writing one-off solutions. Because they are not designed to work as a unified suite, no effort has been made to prevent overlapping error codes or namespace collisions. Furthermore, implementing them on live environments may necessitate adjustments or updates.
 
 Note: some snippets act in ways to treat symptoms of issues and may cause entirely different ones (such as API re-attempts) which may allow the front-end to appear more responsive and less error prone at the expense of additional load on the backend and degraded stability and performance.  Please do not implement snippets on a live site without proper testing and understanding of the potential impact.
 
 # VCL Snippets Listing
 
-This document provides a brief listing and description of the VCL snippets present in the `vcl-playground` repository.
+This directory outlines the available VCL configurations within the `vcl-playground` repository and explains their intended functionality.
 
 ## AI Bots
 
 *   **Block Based on Cache State**
-    *   **Description**: Identifies and blocks bots based on their user-agents when requesting uncached resources to minimize load on the backend without blocking all requests in their entirety.
+    *   **Description**: Identifies and drops bot traffic by inspecting user-agents specifically when they request uncached resources. This approach reduces unnecessary strain on the origin server without completely barring legitimate bot crawling behavior.
     *   **Files**: `AI Bots/block based on cache state/` (`vcl_init.vcl`, `vcl_fetch.vcl`)
 
 *   **Block Based on Query String**
-    *   **Description**: Blocks requests containing specific query string parameters that are associated with unwanted bot traffic.
+    *   **Description**: Rejects incoming requests that include specific query string parameters commonly favored by disruptive or unwanted bot traffic.
     *   **Files**: `AI Bots/block based on query string/` (`vcl_init.vcl`, `vcl_recv.vcl`)
 
 ## API Helper
 
 *   **Reattempt Magento 40X on REST**
-    *   **Description**: Retries REST API requests that return 401 or 404 errors, potentially to handle race conditions or temporary unavailability. usage: `req.restarts < 1`.
-    *   **Files**: `API helper/reattempt Magento 40X on REST/vcl_fetch`
+    *   **Description**: Attempts to fetch REST API resources an additional time if the origin returns a 401 or 404 response. This helps smooth out race conditions or momentary unavailability. Usage: `req.restarts < 1`.
+    *   **Files**: `API helper/reattempt Magento 40X on REST/vcl_fetch.vcl`
 
 *   **Reattempt Magento 502**
-    *   **Description**: Retries requests that result in a 502 Bad Gateway error from the backend.
-    *   **Files**: `API helper/reattempt Magento 502`
+    *   **Description**: Forces the edge to try again whenever the backend responds with a 502 Bad Gateway error.
+    *   **Files**: `API helper/reattempt Magento 502/vcl_fetch.vcl`
 
 ## Attacks and Nuisance Traffic
 
 *   **Ban Abused Carts**
-    *   **Description**: Blocks requests to specific shopping cart IDs that are being abused, typically defined in a VCL table.
+    *   **Description**: Declines traffic attempting to interact with specific shopping cart IDs that have been proven to be abused. The targeted cart IDs are maintained in a dedicated VCL table.
     *   **Files**: `Attacks and nuisance traffic/Ban Abused Carts from Adobe Commerce or Magento/` (`vcl_init.vcl`, `vcl_recv.vcl`)
 
 *   **Block Customer Address File Uploads (Session Reaper)**
-    *   **Description**: Blocks requests to `/customer/address_file/upload` unless the client IP is allowed, mitigating potential session reaper attacks or file upload abuse.
+    *   **Description**: Safeguards against session reaper attacks and unauthorized file uploads by restricting access to `/customer/address_file/upload` exclusively to allowed client IP addresses.
     *   **Files**: `Attacks and nuisance traffic/Block customer address_file uploads (Session Reaper)/` (`vcl_init.vcl`, `vcl_recv.vcl`)
 
+*   **Block Drupal Paths**
+    *   **Description**: Prevents automated scanners from hitting common Drupal framework routes (like `core`, `user/login`, and `update.php`) by returning a 403 Forbidden. This eliminates unnecessary load on origin servers that do not run Drupal.
+    *   **Files**: `Attacks and nuisance traffic/Block Drupal paths/vcl_recv.vcl`
+
 *   **Block Exchange Server Requests**
-    *   **Description**: Blocks requests targeting Microsoft Exchange Server paths (e.g., `autodiscover`, `owa`), which are often used by scanners to find vulnerabilities and may also generate unneeded backend load.
+    *   **Description**: Halts traffic directed at Microsoft Exchange Server endpoints (e.g., `autodiscover`, `owa`). These paths are frequently targeted by vulnerability scanners and misconfigured email clients and add avoidable overhead to the backend.
     *   **Files**: `Attacks and nuisance traffic/Block Exchange Server Requests/vcl_recv.vcl`
 
 *   **Block Obsolete Browsers**
-    *   **Description**: Blocks requests from browser versions considered obsolete or insecure.
+    *   **Description**: Blocks traffic originating from browser versions that are identified as outdated.
     *   **Files**: `Attacks and nuisance traffic/Block Obsolete Browsers/` (`vcl_init`, `vcl_recv`, `vcl_err`)
 
 *   **Block Traffic per ISP**
-    *   **Description**: Blocks traffic from specific ISPs based on the `client.as.name` variable, utilizing GeoIP data.
+    *   **Description**: Restricts access from particular Internet Service Providers by evaluating the `client.as.name` variable.
     *   **Files**: `Attacks and nuisance traffic/Block traffic per ISP/vcl_recv.vcl`
 
 *   **Block WordPress Paths**
-    *   **Description**: Blocks requests to common WordPress paths (e.g., `wp-admin`, `wp-login.php`, `xmlrpc.php`) with a 403 Forbidden error, preventing scanners from generating unneeded backend load as the server should not handle WordPress requests.
+    *   **Description**: Stops requests looking for standard WordPress paths (such as `wp-admin`, `wp-login.php`, or `xmlrpc.php`) before they reach the backend, returning a 403 Forbidden. This saves resources on servers that do not run WordPress.
     *   **Files**: `Attacks and nuisance traffic/Block WordPress paths/vcl_recv.vcl`
 
 ## Avoidable 404s
 
 *   **Define Missing Favicon/Apple Icon**
-    *   **Description**: Uses a regular expression to capture requests for various standard favicon and smartphone/PWA icons (e.g., `favicon.ico`, `apple-touch-icon.png`, `android-chrome-*.png`, `mstile-*.png`, `safari-pinned-tab.svg`) and rewrites them to a canonical path, preventing 404 errors.
+    *   **Description**: Captures calls for missing standard interface icons (e.g., `favicon.ico`, `apple-touch-icon.png`, `android-chrome-*.png`, `mstile-*.png`, `safari-pinned-tab.svg`) using a regular expression and routes them to a canonical location, mitigating frequent 404 errors.
     *   **Files**: `Avoidable 404s/Define missing favicon.ico and apple/vcl_recv.vcl`
 
 ## Cache Manipulation
 
 *   **Avoid API Mesh Cache**
-    *   **Description**: Bypasses the cache (pass) for specific API Mesh GraphQL requests to ensure fresh data.
-    *   **Files**: `Cache Manipulation/Avoid API Mesh Cache/vcl_recv`
+    *   **Description**: Ensures fresh data retrieval by configuring specific API Mesh GraphQL requests to bypass the edge cache layer ('pass').
+    *   **Files**: `Cache Manipulation/Avoid API Mesh Cache/vcl_recv.vcl`
 
 *   **Force Caching on Backends**
-    *   **Description**: Sets caching headers for backend responses that do not send proper expiry information, enforcing a default TTL.
+    *   **Description**: Enforces a default time-to-live (TTL) boundary by injecting caching headers on backend responses that omit proper expiry details.
     *   **Files**: `Cache Manipulation/Force caching on backends that do not send proper expiry/vcl_fetch.vcl`
 
 ## Header Manipulation
 
 *   **Fix-GeoIP**
-    *   **Description**: Overrides the Fastly GeoIP lookup key with the `True-Client-IP` header provided by CloudFlare, ensuring accurate geolocation for requests coming through CloudFlare.
+    *   **Description**: Replaces the default Fastly GeoIP lookup key with the `True-Client-IP` header passed down by CloudFlare, guaranteeing accurate geolocation when traversing a CloudFlare configuration.
     *   **Files**: `Header Manipulation/Fix-GeoIP-CloudFlare/vcl_recv.vcl`
 
 *   **Fix-GeoIP-XFF**
-    *   **Description**: Overrides the Fastly GeoIP lookup key with the first IP in the `X-Forwarded-For` header.
+    *   **Description**: Modifies the Fastly GeoIP lookup key to utilize the first reported IP address within the `X-Forwarded-For` header.
     *   **Files**: `Header Manipulation/Fix-GeoIP-XFF/vcl_recv.vcl`
 
 *   **Force Content-Security-Policy to Report-Only**
-    *   **Description**: Downgrades an enforced `Content-Security-Policy` header to `Content-Security-Policy-Report-Only`, useful for testing CSP changes without breaking functionality.
+    *   **Description**: Safely tests CSP parameters by downgrading a restrictive `Content-Security-Policy` header into an informational `Content-Security-Policy-Report-Only` header, preserving site functionality during the tuning phase.
     *   **Files**: `Header Manipulation/Force Content-Security-Policy to report-only/vcl_fetch.vcl`
 
 *   **Override CORS for Commerce Cloud**
-    *   **Description**: Allows selective CORS overrides for chosen URLs on specific domains using VCL tables (`cors_allowed` and `urls_to_override`).
+    *   **Description**: Facilitates targeted Cross-Origin Resource Sharing (CORS) overrides for designated URLs on specified domains, relying on mapped VCL tables (`cors_allowed` and `urls_to_override`).
     *   **Files**: `Header Manipulation/Override CORS for Commerce Cloud/` (`vcl_deliver.vcl`, `vcl_init.vcl`)
 
 *   **Override CORS for Commerce Cloud API Mesh**
-    *   **Description**: Updates CORS headers for API Mesh requests, verifying the origin against a allowed
+    *   **Description**: Reconfigures and validates CORS headers explicitly for API Mesh transactions against an approved baseline.
     *   **Files**: `Header Manipulation/Override CORS for Commerce Cloud API Mesh/` (`vcl_init.vcl`, `vcl_deliver.vcl`)
 
 *   **Patch to Correct Damaged Surrogate-Keys on Edge Delivery Services**
-    *   **Description**: Workaround for Adobe Edge Delivery Services to correct expected behavior. Falls back to `surrogate-key` values when `x-magento-tags` is not present, allowing both to function correctly.
+    *   **Description**: Provides a workaround for Adobe Edge Delivery Services behavior. The logic falls back to existing `surrogate-key` variables if an `x-magento-tags` header is absent, letting both architectures operate as intended.
     *   **Files**: `Header Manipulation/Patch to correct damaged surrogate-keys on Edge Delivery Services/vcl_fetch.vcl`
 
 *   **Spoof the Via Header**
-    *   **Description**: Modifies the `Via` header, possibly to hide upstream proxies or for internal routing purposes.
+    *   **Description**: Alters the `Via` header, commonly configured either to obscure upstream proxies from public view or to fulfill internal network routing conventions.
     *   **Files**: `Header Manipulation/Spoof the via header/vcl_deliver.vcl`
 
 *   **Strip All But First IP from X-Forwarded-For**
-    *   **Description**: Cleans the `X-Forwarded-For` header by keeping only the first IP address. Updated to support both IPv4 and IPv6 addresses using a comma-based separator check, ensuring the origin sees the true client IP.
+    *   **Description**: Extracts and preserves solely the original client's IP from the `X-Forwarded-For` header chain. This update accommodates both IPv4 and IPv6 protocols by separating addresses cleanly with commas, passing the true client IP back to the origin.
     *   **Files**: `Header Manipulation/Strip all but the first IP from x-forwarded-for/vcl_recv.vcl`
 
 ## URL Manipulation
 
 *   **Add Trailing Slash**
-    *   **Description**: Redirects or rewrites URLs to ensure they end with a trailing slash, standardizing URL structure.
+    *   **Description**: Intercepts URIs lacking a terminal slash and rewrites or redirects them to include it, thereby enforcing standard URL consistency.
     *   **Files**: `URL Manipulation/Add Trailing Slash/` (`vcl_recv.vcl`, `vcl_error.vcl`)
 
 *   **ApplePay Verification**
-    *   **Description**: Handles requests for ApplePay verification files.
+    *   **Description**: Serves ApplePay domain verification files directly.
     *   **Files**: `URL Manipulation/ApplePay Verification/vcl_recv.vcl`
 
 *   **ApplePay via Synthetic Multisite**
-    *   **Description**: A more complex setup for handling ApplePay verification in a multisite environment using synthetic responses.
+    *   **Description**: Sets up synthetic responses for ApplePay verification tasks in more complex, multi-site deployments.
     *   **Files**: `URL Manipulation/ApplePay via Synthetic multisite example/` (`vcl_recv.vcl`, `vcl_err.vcl`)
 
 *   **Filter utm_ parameters**
-    *   **Description**: Strips Google Analytics (`utm_`) parameters from the query string to improve cache hit rates.
+    *   **Description**: Boosts cache hit ratios by stripping analytics indicators (like Google's `utm_` parameters) out of request query strings.
     *   **Files**: `URL Manipulation/Filter utm_ parameters from URL/vcl_recv.vcl`
