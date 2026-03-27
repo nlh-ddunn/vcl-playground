@@ -65,6 +65,10 @@ This directory outlines the available VCL configurations within the `vcl-playgro
     *   **Description**: Captures calls for missing standard interface icons (e.g., `favicon.ico`, `apple-touch-icon.png`, `android-chrome-*.png`, `mstile-*.png`, `safari-pinned-tab.svg`) using a regular expression and routes them to a canonical location, mitigating frequent 404 errors.
     *   **Files**: `Avoidable 404s/Define missing favicon.ico and apple/vcl_recv.vcl`
 
+*   **Missing Favicon with Fastly IO**
+    *   **Description**: Leverages the Fastly Image Optimizer (Fastly IO) to dynamically encode and resize a default `favicon.png` fallback into platform-specific dimensions (Apple Touch, Android Chrome, Windows mstile). It rigidly enforces correct MIME types upon delivery and silently synthesizes an empty cached placeholder if the origin throws a 404. **Warning: This code suite is currently experimental and has not been fully tested in production environments.**
+    *   **Files**: `Avoidable 404s/Missing Favicon with Fastly IO/` (`vcl_recv.vcl`, `vcl_fetch.vcl`, `vcl_deliver.vcl`, `vcl_error.vcl`)
+
 ## Cache Manipulation
 
 *   **Avoid API Mesh Cache**
