@@ -127,6 +127,6 @@ This directory outlines the available VCL configurations within the `vcl-playgro
     *   **Description**: Sets up synthetic responses for ApplePay verification tasks in more complex, multi-site deployments.
     *   **Files**: `URL Manipulation/ApplePay via Synthetic multisite example/` (`vcl_recv.vcl`, `vcl_err.vcl`)
 
-*   **Filter utm_ parameters**
-    *   **Description**: Boosts cache hit ratios by stripping analytics indicators (like Google's `utm_` parameters) out of request query strings.
-    *   **Files**: `URL Manipulation/Filter utm_ parameters from URL/vcl_recv.vcl`
+*   **Filter Marketing Parameters**
+    *   **Description**: Boosts cache hit ratios by stripping out common marketing, tracking, and analytics indicators (such as `utm_`, `gclid`, `fbclid`, etc.) from request query strings.
+    *   **Files**: `URL Manipulation/Filter Marketing Parameters/vcl_recv.vcl`
