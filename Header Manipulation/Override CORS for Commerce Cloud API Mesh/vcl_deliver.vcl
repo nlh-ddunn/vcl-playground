@@ -2,6 +2,10 @@
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Headers
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods
+#
+# Adobe API Mesh Documentation:
+# https://developer.adobe.com/graphql-mesh-gateway/
+# https://experienceleague.adobe.com/docs/commerce-merchant-services/api-mesh/getting-started.html
 
 
 if(req.url.path ~ "^/api/[a-z0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}/graphql" && table.contains(cors_allowed, std.replace(req.http.referer, "https://", ""))){
