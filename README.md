@@ -37,7 +37,7 @@ This directory outlines the available VCL configurations within the `vcl-playgro
 
 *   **Block Session Reaper + Polyshell**
     *   **Description**: Safeguards against session reaper attacks and unauthorized file uploads by restricting access to `/customer/address_file/upload` exclusively to allowed client IP addresses. It also blocks Polyshell, which let's be honest, is just sessionreaper in a trenchcoat.
-    *   **Files**: `Attacks and nuisance traffic/Block Session Reaper + Polyshell / Polyshell)/` (`vcl_init.vcl`, `vcl_recv.vcl`)
+    *   **Files**: `Attacks and nuisance traffic/Block Session Reaper + Polyshell/` (`vcl_init.vcl`, `vcl_recv.vcl`)
 
 *   **Block Drupal Paths**
     *   **Description**: Prevents automated scanners from hitting common Drupal framework routes (like `core`, `user/login`, and `update.php`) by returning a 403 Forbidden. This eliminates unnecessary load on origin servers that do not run Drupal.
