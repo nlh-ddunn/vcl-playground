@@ -81,13 +81,9 @@ This directory outlines the available VCL configurations within the `vcl-playgro
 
 ## Header Manipulation
 
-*   **Fix-GeoIP**
-    *   **Description**: Replaces the default Fastly GeoIP lookup key with the `True-Client-IP` header passed down by CloudFlare, guaranteeing accurate geolocation when traversing a CloudFlare configuration.
-    *   **Files**: `Header Manipulation/Fix-GeoIP-CloudFlare/vcl_recv.vcl`
-
-*   **Fix-GeoIP-Akamai**
-    *   **Description**: Replaces the default Fastly GeoIP lookup key with the `True-Client-IP` header passed down by Akamai, guaranteeing accurate geolocation when traversing an Akamai configuration.
-    *   **Files**: `Header Manipulation/Fix-GeoIP-Akamai/vcl_recv.vcl`
+*   **Fix-GeoIP-True-Client-IP**
+    *   **Description**: Replaces the default Fastly GeoIP lookup key with the `True-Client-IP` header. This header is utilized by both Cloudflare (Enterprise) and Akamai to pass the original client IP.
+    *   **Files**: `Header Manipulation/Fix-GeoIP-True-Client-IP/vcl_recv.vcl`
 
 *   **Fix-GeoIP-Imperva**
     *   **Description**: Replaces the default Fastly GeoIP lookup key with the `Incap-Client-IP` header passed down by Imperva (Incapsula), guaranteeing accurate geolocation when traversing an Imperva configuration.
