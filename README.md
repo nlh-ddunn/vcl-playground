@@ -85,9 +85,18 @@ This directory outlines the available VCL configurations within the `vcl-playgro
     *   **Description**: Replaces the default Fastly GeoIP lookup key with the `True-Client-IP` header passed down by CloudFlare, guaranteeing accurate geolocation when traversing a CloudFlare configuration.
     *   **Files**: `Header Manipulation/Fix-GeoIP-CloudFlare/vcl_recv.vcl`
 
+*   **Fix-GeoIP-Akamai**
+    *   **Description**: Replaces the default Fastly GeoIP lookup key with the `True-Client-IP` header passed down by Akamai, guaranteeing accurate geolocation when traversing an Akamai configuration.
+    *   **Files**: `Header Manipulation/Fix-GeoIP-Akamai/vcl_recv.vcl`
+
+*   **Fix-GeoIP-Imperva**
+    *   **Description**: Replaces the default Fastly GeoIP lookup key with the `Incap-Client-IP` header passed down by Imperva (Incapsula), guaranteeing accurate geolocation when traversing an Imperva configuration.
+    *   **Files**: `Header Manipulation/Fix-GeoIP-Imperva/vcl_recv.vcl`
+
 *   **Fix-GeoIP-XFF**
     *   **Description**: Modifies the Fastly GeoIP lookup key to utilize the first reported IP address within the `X-Forwarded-For` header.
     *   **Files**: `Header Manipulation/Fix-GeoIP-XFF/vcl_recv.vcl`
+
 
 *   **Force Content-Security-Policy to Report-Only**
     *   **Description**: Safely tests CSP parameters by downgrading a restrictive `Content-Security-Policy` header into an informational `Content-Security-Policy-Report-Only` header, preserving site functionality during the tuning phase.
