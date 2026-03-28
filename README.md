@@ -128,5 +128,5 @@ This directory outlines the available VCL configurations within the `vcl-playgro
     *   **Files**: `URL Manipulation/ApplePay via Synthetic multisite example/` (`vcl_recv.vcl`, `vcl_err.vcl`)
 
 *   **Filter Marketing Parameters**
-    *   **Description**: Boosts cache hit ratios by stripping out common marketing, tracking, and analytics indicators (such as `utm_`, `gclid`, `fbclid`, etc.) from request query strings.
+    *   **Description**: Boosts cache hit ratios by stripping out common marketing, tracking, and analytics indicators (such as `utm_`, `gclid`, `fbclid`, etc.) from request query strings, and safely normalizing the remaining parameters by sorting them.
     *   **Files**: `URL Manipulation/Filter Marketing Parameters/vcl_recv.vcl`
