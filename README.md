@@ -81,17 +81,9 @@ This directory outlines the available VCL configurations within the `vcl-playgro
 
 ## Header Manipulation
 
-*   **Fix-GeoIP-True-Client-IP**
-    *   **Description**: Replaces the default Fastly GeoIP lookup key with the `True-Client-IP` header. This header is utilized by both Cloudflare (Enterprise) and Akamai to pass the original client IP.
-    *   **Files**: `Header Manipulation/Fix-GeoIP-True-Client-IP/vcl_recv.vcl`
-
-*   **Fix-GeoIP-Imperva**
-    *   **Description**: Replaces the default Fastly GeoIP lookup key with the `Incap-Client-IP` header passed down by Imperva (Incapsula), guaranteeing accurate geolocation when traversing an Imperva configuration.
-    *   **Files**: `Header Manipulation/Fix-GeoIP-Imperva/vcl_recv.vcl`
-
-*   **Fix-GeoIP-XFF**
-    *   **Description**: Modifies the Fastly GeoIP lookup key to utilize the first reported IP address within the `X-Forwarded-For` header.
-    *   **Files**: `Header Manipulation/Fix-GeoIP-XFF/vcl_recv.vcl`
+*   **Fix-GeoIP**
+    *   **Description**: Replaces the default Fastly GeoIP lookup key by checking for proprietary headers (`True-Client-IP` from Akamai/Cloudflare, `Incap-Client-IP` from Imperva), with a graceful fallback to extracting the original client IP from the `X-Forwarded-For` header.
+    *   **Files**: `Header Manipulation/Fix-GeoIP/vcl_recv.vcl`
 
 
 *   **Force Content-Security-Policy to Report-Only**
@@ -130,7 +122,7 @@ This directory outlines the available VCL configurations within the `vcl-playgro
 
 *   **ApplePay via Synthetic Multisite**
     *   **Description**: Sets up synthetic responses for ApplePay verification tasks in more complex, multi-site deployments.
-    *   **Files**: `URL Manipulation/ApplePay via Synthetic multisite example/` (`vcl_recv.vcl`, `vcl_err.vcl`)
+    *   **Files**: `URL Manipulation/ApplePay via Synthetic multisite example/` (`vcl_recv.vcl`, `vcl_err.vcl`, `vcl_init.vcl`)
 
 *   **Filter Marketing Parameters**
     *   **Description**: Boosts cache hit ratios by stripping out common marketing, tracking, and analytics indicators (such as `utm_`, `gclid`, `fbclid`, etc.) from request query strings, and safely normalizing the remaining parameters by sorting them.
