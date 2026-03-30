@@ -31,8 +31,12 @@ This directory outlines the available VCL configurations within the `vcl-playgro
 
 ## Attacks and Nuisance Traffic
 
+*   **Abused Cart HoneyPot**
+    *   **Description**: Identifies abused Magento/Adobe Commerce cart IDs (32-character hashes) and, instead of a hard rejection, intercepts the traffic to return a synthetic `200 OK` JSON response. This tricks automated scripts into logging a success and wastes their time without touching the backend.
+    *   **Files**: `Attacks and nuisance traffic/Abused Cart HoneyPot/` (`vcl_init.vcl`, `vcl_recv.vcl`, `vcl_error.vcl`)
+
 *   **Ban Abused Carts**
-    *   **Description**: Declines traffic attempting to interact with specific shopping cart IDs that have been proven to be abused. The targeted cart IDs are maintained in a dedicated VCL table.
+    *   **Description**: Declines traffic attempting to interact with specific 32-character shopping cart IDs that are proven to be abused. Employs strong HTTP 405 and 410 errors to halt bot retries effectively. The targeted cart IDs are maintained in a dedicated VCL table.
     *   **Files**: `Attacks and nuisance traffic/Ban Abused Carts from Adobe Commerce or Magento/` (`vcl_init.vcl`, `vcl_recv.vcl`)
 
 *   **Block Session Reaper + Polyshell**
