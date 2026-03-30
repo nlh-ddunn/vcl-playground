@@ -43,13 +43,13 @@ This directory outlines the available VCL configurations within the `vcl-playgro
     *   **Description**: Safeguards against session reaper attacks and unauthorized file uploads by restricting access to `/customer/address_file/upload` exclusively to allowed client IP addresses. It also blocks Polyshell, which let's be honest, is just sessionreaper in a trenchcoat.
     *   **Files**: `Attacks and nuisance traffic/Block Session Reaper + Polyshell/` (`vcl_init.vcl`, `vcl_recv.vcl`)
 
-*   **Block Drupal Paths**
-    *   **Description**: Prevents automated scanners from hitting common Drupal framework routes (like `core`, `user/login`, and `update.php`) by returning a 403 Forbidden. This eliminates unnecessary load on origin servers that do not run Drupal.
-    *   **Files**: `Attacks and nuisance traffic/Block Drupal paths/vcl_recv.vcl`
-
 *   **Block Exchange Server Requests**
     *   **Description**: Halts traffic directed at Microsoft Exchange Server endpoints (e.g., `autodiscover`, `owa`). These paths are frequently targeted by vulnerability scanners and misconfigured email clients and add avoidable overhead to the backend.
     *   **Files**: `Attacks and nuisance traffic/Block Exchange Server Requests/vcl_recv.vcl`
+
+*   **Block non-Magento CMS systems**
+    *   **Description**: Shields the origin from automated vulnerability scans targeting popular platforms like WordPress, Joomla, Drupal, MediaWiki, Typo3, Ghost, and Bitrix. It maps known administrative and system-level URLs to a 403 Forbidden status, ensuring only Magento-relevant traffic is processed.
+    *   **Files**: `Attacks and nuisance traffic/Block non-Magento CMS systems/vcl_recv.vcl`
 
 *   **Block Obsolete Browsers**
     *   **Description**: Blocks traffic originating from browser versions that are identified as outdated.
@@ -58,10 +58,6 @@ This directory outlines the available VCL configurations within the `vcl-playgro
 *   **Block Traffic per ISP**
     *   **Description**: Restricts access from particular Internet Service Providers by evaluating the `client.as.name` variable.
     *   **Files**: `Attacks and nuisance traffic/Block traffic per ISP/vcl_recv.vcl`
-
-*   **Block WordPress Paths**
-    *   **Description**: Stops requests looking for standard WordPress paths (such as `wp-admin`, `wp-login.php`, or `xmlrpc.php`) before they reach the backend, returning a 403 Forbidden. This saves resources on servers that do not run WordPress.
-    *   **Files**: `Attacks and nuisance traffic/Block WordPress paths/vcl_recv.vcl`
 
 ## Avoidable 404s
 
