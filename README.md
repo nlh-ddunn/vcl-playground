@@ -69,6 +69,10 @@ This directory outlines the available VCL configurations within the `vcl-playgro
     *   **Description**: Leverages the Fastly Image Optimizer (Fastly IO) to dynamically encode and resize a default `favicon.png` fallback into platform-specific dimensions (Apple Touch, Android Chrome, Windows mstile). It rigidly enforces correct MIME types upon delivery and silently synthesizes an empty cached placeholder if the origin throws a 404. **Warning: This code suite is currently experimental and has not been fully tested in production environments.**
     *   **Files**: `Avoidable 404s/Missing Favicon with Fastly IO/` (`vcl_recv.vcl`, `vcl_fetch.vcl`, `vcl_deliver.vcl`, `vcl_error.vcl`)
 
+*   **Lockdown Media Contents**
+    *   **Description**: Analyzes requests for `/(index.php/)?media/` elements. Unused caching variations are prevented by stripping extraneous URL parameters, maintaining only those necessary for Fastly IO. Additionally, missing 404 media image requests (validated by their file extension) are prevented from triggering large, unoptimized HTML 404 responses from the backend, and instead directly serve a synthetic 32x32 red "X" from the Edge cache with a 1-hour TTL.
+    *   **Files**: `Avoidable 404s/Lockdown Media Contents/` (`vcl_recv.vcl`, `vcl_fetch.vcl`, `vcl_error.vcl`)
+
 ## Cache Manipulation
 
 *   **Avoid API Mesh Cache**
