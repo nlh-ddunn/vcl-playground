@@ -6,20 +6,20 @@ table protected_urls {
   "/": ""
 }
 
-# this table was last updated on 2026-02-24
+# this table was last updated on 2026-04-17
 # Top 10 browsers determined based on global market share statistics (e.g. StatCounter, BrowserStack)
-# Criteria for minimum versions: most recent 6 months or 5 releases, whichever is newer.
+# Criteria for minimum versions: most recent 5 releases or within 1 year, whichever is most recent.
 table allowed_browsers {
-  "Safari": "26",
-  "Chrome": "141",
-  "Microsoft Edge": "141",
-  "Firefox": "143",
-  "Opera": "123",
-  "SamsungBrowser": "29",
-  "UCBrowser": "15",
-  "Yandex": "25",
-  "Android": "141",
-  "Coc Coc": "145"
+  "Safari": "22",
+  "Chrome": "142",
+  "Microsoft Edge": "142",
+  "Firefox": "144",
+  "Opera": "125",
+  "SamsungBrowser": "28",
+  "UCBrowser": "16",
+  "Yandex": "24",
+  "Android": "142",
+  "Coc Coc": "142"
 }
 table carve_out_browsers {
   "Chrome": "79" #Some legitimate site monitors spoof this old version of Chrome
