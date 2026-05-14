@@ -11,3 +11,7 @@ if(table.contains(allowed_browsers, client.browser.name) && (req.method == "POST
   }
 }
 
+if(table.contains(disallowed_browsers, client.browser.name)){
+  error 643;
+}
+

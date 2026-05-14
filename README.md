@@ -52,7 +52,7 @@ This directory outlines the available VCL configurations within the `vcl-playgro
     *   **Files**: `Attacks and nuisance traffic/Block non-Magento CMS systems/vcl_recv.vcl`
 
 *   **Block Obsolete Browsers**
-    *   **Description**: Blocks traffic originating from browser versions that are identified as outdated.
+    *   **Description**: Blocks traffic originating from browser versions that are identified as outdated, as well as legacy/unsupported browsers often associated with malicious automated traffic.
     *   **Files**: `Attacks and nuisance traffic/Block Obsolete Browsers/` (`vcl_init`, `vcl_recv`, `vcl_err`)
 
 *   **Block Traffic per ISP**
